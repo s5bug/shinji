@@ -1,4 +1,4 @@
 package tf.bug.shinji
 package instances
 
-object all extends scal.all
+object all extends ScalInstances.all

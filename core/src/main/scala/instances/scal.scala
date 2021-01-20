@@ -1,7 +1,10 @@
 package tf.bug.shinji
 package instances
 
-trait scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
+object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
+
+  override def bimap[A, B, C, D](f: A => C, g: B => D): ((A, B)) => (C, D) =
+    { case (a, b) => (f(a), g(b)) }
 
   override def curry[A, B, C](f: ((A, B)) => C): A => B => C =
     (a: A) => (b: B) => f((a, b))
@@ -41,8 +44,8 @@ trait scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
 
   override def id[A]: A => A = identity[A]
 
-  override def dimap[A, B, C, D](fab: A => B, f: C => A, g: B => D): C => D =
-    f.andThen(fab).andThen(g)
+  override def dimap[A, B, C, D](f: C => A, g: B => D): (A => B) => C => D =
+    fab => f.andThen(fab).andThen(g)
 
   override def compose[A, B, C](f: B => C, g: A => B): A => C =
     f.compose(g)
@@ -52,6 +55,20 @@ trait scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
   
 }
 
-object scal {
-  trait all extends scal
+object OptionMonad extends Monad[Any, Function1, Option] {
+
+  override val category: Category[Any, Function1] = Scal
+
+  override def map[A, B](f: A => B): Option[A] => Option[B] = _.map(f)
+
+  override def unit[A]: A => Option[A] = Option(_)
+  override def join[A]: Option[Option[A]] => Option[A] = _.flatten
+
+}
+
+object ScalInstances {
+  trait all {
+    implicit val scalCategory: CartesianClosed[Any, Function1, Unit, Tuple2, Function1] = Scal
+    implicit val optionMonad: Monad[Any, Function1, Option] = OptionMonad
+  }
 }
