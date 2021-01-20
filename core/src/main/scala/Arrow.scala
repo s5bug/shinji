@@ -1,6 +1,6 @@
 package tf.bug.shinji
 
-trait Arrow[Obj, Hom[_ <: Obj, _ <: Obj], I <: Obj, Tens[_ <: Obj, _ <: Obj] <: Obj, F[_ <: Obj, _ <: Obj]] extends StrongProfunctor[Obj, Hom, I, Tens, F] with Monoidal[Obj, F, I, Tens] {
+trait Arrow[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, F[_ <: Obj, _ <: Obj]] extends StrongProfunctor[Obj, Hom, Empty, Prod, F] with Cartesian[Obj, F, Empty, Prod] {
 
   def lift[A <: Obj, B <: Obj](f: Hom[A, B]): F[A, B]
 
@@ -9,5 +9,13 @@ trait Arrow[Obj, Hom[_ <: Obj, _ <: Obj], I <: Obj, Tens[_ <: Obj, _ <: Obj] <: 
     val ag = lift(g)
     fab => compose(ag, compose(fab, af))
   }
+
+  override def id[A <: Obj]: F[A, A] = lift(strongProfunctorCategory.id[A])
+
+  def split[A <: Obj, B <: Obj, C <: Obj, D <: Obj](f: F[A, B], g: F[C, D]): F[Prod[A, C], Prod[B, D]] =
+    andThen(first(f), second(g))
+
+  def merge[A <: Obj, B <: Obj, C <: Obj](f: F[A, B], g: F[A, C]): F[A, Prod[B, C]] =
+    andThen(duplicate[A], split(f, g))
 
 }

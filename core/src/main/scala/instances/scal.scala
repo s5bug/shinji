@@ -1,7 +1,7 @@
 package tf.bug.shinji
 package instances
 
-object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
+object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] with Arrow[Any, Function1, Unit, Tuple2, Function1] {
 
   override def curry[A, B, C](f: ((A, B)) => C): A => B => C =
     a => b => f((a, b))
@@ -50,6 +50,16 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
 
   override def andThen[A, B, C](f: A => B, g: B => C): A => C =
     f.andThen(g)
+
+  override def lift[A, B](f: A => B): A => B = f
+
+  override def first[A, B, C]: (A => B) => ((A, C)) => (B, C) =
+    lmap
+
+  override def second[A, B, C]: (A => B) => ((C, A)) => (C, B) =
+    rmap
+
+  override val strongProfunctorCategory: Monoidal[Any, Function, Unit, Tuple2] = this
 
 }
 
