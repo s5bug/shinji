@@ -27,6 +27,6 @@ I decided that I would really like the benefits that these things give me
 (especially things like Monad/Arrow syntax) without having to implement any
 sort of runtime-checking to make sure I have the right types.
 
-## what does any of this mean?
+## what does any of this code mean?
 
 I have no clue. I'm just copying what I see on nLab.
