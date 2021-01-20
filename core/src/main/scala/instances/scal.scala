@@ -15,8 +15,14 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
   override def expId[A]: Unit => A => A =
     (_: Unit) => identity[A]
 
-  override def second[A, B, C]: (B => C) => (A => B) => A => C =
-    f => g => compose[A, B, C](f, g)
+  override def expCompose[A, B, C]: (A => B) => (C => A) => C => B =
+    f => g => c => f(g(c))
+
+  override def first[A, B, C]: (A => B) => ((A, C)) => (B, C) =
+    f => { case (a, c) => (f(a), c) }
+
+  override def second[A, B, C]: (A => B) => ((C, A)) => (C, B) =
+    f => { case (c, a) => (c, f(a)) }
 
   override def duplicate[A]: A => (A, A) =
     a => (a, a)
@@ -61,8 +67,8 @@ object OptionMonad extends Monad[Any, Function1, Option] {
 
   override def map[A, B](f: A => B): Option[A] => Option[B] = _.map(f)
 
-  override def unit[A]: A => Option[A] = Option(_)
-  override def join[A]: Option[Option[A]] => Option[A] = _.flatten
+  override def pure[A]: A => Option[A] = Option(_)
+  override def flatten[A]: Option[Option[A]] => Option[A] = _.flatten
 
 }
 
