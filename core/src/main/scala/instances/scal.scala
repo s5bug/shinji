@@ -51,6 +51,12 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] wit
   override def andThen[A, B, C](f: A => B, g: B => C): A => C =
     f.andThen(g)
 
+  override def eval[A, B]: ((A => B, A)) => B =
+    { case (f, a) => f(a) }
+
+  override def multiply[A, B]: A => B => (A, B) =
+    a => b => (a, b)
+
   override def lift[A, B](f: A => B): A => B = f
 
   override def first[A, B, C]: (A => B) => ((A, C)) => (B, C) =
