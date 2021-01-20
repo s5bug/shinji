@@ -6,6 +6,6 @@ trait Monad[Obj, Hom[_ <: Obj, _ <: Obj], F[_ <: Obj] <: Obj] extends Endofuncto
   def flatten[A <: Obj]: Hom[F[F[A]], F[A]]
 
   def flatMap[A <: Obj, B <: Obj](f: Hom[A, F[B]]): Hom[F[A], F[B]] =
-    category.andThen(map(f), flatten[B])
+    endofunctorCategory.andThen(map(f), flatten[B])
 
 }
