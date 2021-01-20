@@ -51,3 +51,7 @@ trait scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] {
     f.andThen(g)
   
 }
+
+object scal {
+  trait all extends scal
+}

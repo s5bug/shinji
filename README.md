@@ -27,6 +27,12 @@ I decided that I would really like the benefits that these things give me
 (especially things like Monad/Arrow syntax) without having to implement any
 sort of runtime-checking to make sure I have the right types.
 
+## a monad is a monoid in the category of endofunctors
+
+This library is meant to be usable in Scala 2, and this kind of behavior cannot
+be encoded in Scala 2. However, if Scala 3 is used, then `Obj` could be
+replaced with `Obj <: AnyKind`, and then this behavior can be specified.
+
 ## what does any of this code mean?
 
 I have no clue. I'm just copying what I see on nLab.
