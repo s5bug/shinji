@@ -60,10 +60,10 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] wit
   override def lift[A, B](f: A => B): A => B = f
 
   override def first[A, B, C]: (A => B) => ((A, C)) => (B, C) =
-    lmap
+    lbimap
 
   override def second[A, B, C]: (A => B) => ((C, A)) => (C, B) =
-    rmap
+    rbimap
 
   override val strongProfunctorCategory: Monoidal[Any, Function, Unit, Tuple2] = this
 
@@ -83,6 +83,7 @@ object OptionMonad extends Monad[Any, Function1, Option] {
 object ScalInstances {
   trait all {
     implicit val scalCategory: CartesianClosed[Any, Function1, Unit, Tuple2, Function1] = Scal
+    implicit val scalArrow: Arrow[Any, Function1, Unit, Tuple2, Function1] = Scal
     implicit val optionMonad: Monad[Any, Function1, Option] = OptionMonad
   }
 }
