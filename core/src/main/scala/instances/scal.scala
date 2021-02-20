@@ -9,6 +9,9 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] wit
   override def uncurry[A, B, C](f: A => B => C): ((A, B)) => C =
     { case (a, b) => f(a)(b) }
 
+  override def swap[A <: Any, B <: Any]: ((A, B)) => (B, A) =
+    { case (a, b) => (b, a) }
+
   override def duplicate[A]: A => (A, A) =
     a => (a, a)
 

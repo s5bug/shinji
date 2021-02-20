@@ -28,4 +28,16 @@ trait ArrowSyntax {
 
   }
 
+  def unitL[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, A <: Obj, F[_, _]](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[Prod[Empty, A], A] =
+    arr.unitorLeft[A]
+
+  def unitR[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, A <: Obj, F[_, _]](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[Prod[A, Empty], A] =
+    arr.unitorRight[A]
+
+  def deunitL[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, A <: Obj, F[_, _]](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[A, Prod[Empty, A]] =
+    arr.deunitorLeft[A]
+
+  def deunitR[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, A <: Obj, F[_, _]](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[A, Prod[A, Empty]] =
+    arr.deunitorRight[A]
+
 }

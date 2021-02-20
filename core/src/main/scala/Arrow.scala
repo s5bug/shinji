@@ -10,8 +10,6 @@ trait Arrow[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj]
     fab => compose(ag, compose(fab, af))
   }
 
-  override def id[A <: Obj]: F[A, A] = lift(strongProfunctorCategory.id[A])
-
   def split[A <: Obj, B <: Obj, C <: Obj, D <: Obj](f: F[A, B], g: F[C, D]): F[Prod[A, C], Prod[B, D]] =
     andThen(first(f), second(g))
 
