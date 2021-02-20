@@ -1,6 +1,11 @@
 package tf.bug.shinji
 
-trait Monoidal[Obj, Hom[_ <: Obj, _ <: Obj], I <: Obj, Tens[_ <: Obj, _ <: Obj] <: Obj] extends Category[Obj, Hom] with Bifunctor[Obj, Hom, Obj, Hom, Obj, Hom, Tens] {
+trait Monoidal[
+  Obj,
+  Hom[_ <: Obj, _ <: Obj],
+  I <: Obj,
+  Tens[_ <: Obj, _ <: Obj] <: Obj
+] extends Category[Obj, Hom] with Bifunctor[Obj, Hom, Obj, Hom, Obj, Hom, Tens] {
   def associateRight[A <: Obj, B <: Obj, C <: Obj]: Hom[Tens[Tens[A, B], C], Tens[A, Tens[B, C]]]
   def associateLeft[A <: Obj, B <: Obj, C <: Obj]: Hom[Tens[A, Tens[B, C]], Tens[Tens[A, B], C]]
 

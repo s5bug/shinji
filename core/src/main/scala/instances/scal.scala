@@ -1,7 +1,19 @@
 package tf.bug.shinji
 package instances
 
-object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] with Arrow[Any, Function1, Unit, Tuple2, Function1] {
+object Scal extends CartesianClosed[
+  /* Obj = */ Any,
+  /* Hom = */ Function1,
+  /* Empty = */ Unit,
+  /* Prod = */ Tuple2,
+  /* Exp = */ Function1
+] with Arrow[
+  /* Obj = */ Any,
+  /* Hom = */ Function1,
+  /* Empty = */ Unit,
+  /* Prod = */ Tuple2,
+  /* F = */ Function1
+] {
 
   override def curry[A, B, C](f: ((A, B)) => C): A => B => C =
     a => b => f((a, b))
@@ -72,7 +84,11 @@ object Scal extends CartesianClosed[Any, Function1, Unit, Tuple2, Function1] wit
 
 }
 
-object OptionMonad extends Monad[Any, Function1, Option] {
+object OptionMonad extends Monad[
+  /* Obj = */ Any,
+  /* Hom = */ Function1,
+  /* F = */ Option
+] {
 
   override val endofunctorCategory: Category[Any, Function] = Scal
 

@@ -1,6 +1,11 @@
 package tf.bug.shinji
 
-trait Symmetric[Obj, Hom[_ <: Obj, _ <: Obj], I <: Obj, Tens[_ <: Obj, _ <: Obj] <: Obj] extends Monoidal[Obj, Hom, I, Tens] {
+trait Symmetric[
+  Obj,
+  Hom[_ <: Obj, _ <: Obj],
+  I <: Obj,
+  Tens[_ <: Obj, _ <: Obj] <: Obj
+] extends Monoidal[Obj, Hom, I, Tens] {
   def swap[A <: Obj, B <: Obj]: Hom[Tens[A, B], Tens[B, A]]
 
   override def associateLeft[A <: Obj, B <: Obj, C <: Obj]: Hom[Tens[A, Tens[B, C]], Tens[Tens[A, B], C]] = {

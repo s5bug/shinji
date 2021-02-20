@@ -1,6 +1,12 @@
 package tf.bug.shinji
 
-trait Arrow[Obj, Hom[_ <: Obj, _ <: Obj], Empty <: Obj, Prod[_ <: Obj, _ <: Obj] <: Obj, F[_ <: Obj, _ <: Obj]] extends StrongProfunctor[Obj, Hom, Empty, Prod, F] with Cartesian[Obj, F, Empty, Prod] {
+trait Arrow[
+  Obj,
+  Hom[_ <: Obj, _ <: Obj],
+  Empty <: Obj,
+  Prod[_ <: Obj, _ <: Obj] <: Obj,
+  F[_ <: Obj, _ <: Obj]
+] extends StrongProfunctor[Obj, Hom, Empty, Prod, F] with Cartesian[Obj, F, Empty, Prod] {
 
   def lift[A <: Obj, B <: Obj](f: Hom[A, B]): F[A, B]
 
