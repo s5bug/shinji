@@ -1,5 +1,14 @@
 package tf.bug.shinji
 
+/**
+ * A Functor from C to D.
+ *
+ * @tparam ObjC C's Obj
+ * @tparam HomC C's Hom
+ * @tparam ObjD D's Obj
+ * @tparam HomD D's Hom
+ * @tparam F The Functor's ObjC → ObjD mapping
+ */
 trait Functor[
   ObjC,
   HomC[_ <: ObjC, _ <: ObjC],
@@ -9,6 +18,13 @@ trait Functor[
 ] {
   val inFunctorCategory: Category[ObjC, HomC]
   val outFunctorCategory: Category[ObjD, HomD]
+
+  /**
+   * The Functor's HomC → HomD mapping.
+   *
+   * @param f The morphism in C
+   * @return The morphism in Im_F
+   */
   def map[A <: ObjC, B <: ObjC](f: HomC[A, B]): HomD[F[A], F[B]]
 }
 

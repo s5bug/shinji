@@ -36,6 +36,12 @@ object Scal extends CartesianClosed[
   override def expId[A]: Unit => A => A =
     { case () => identity[A] }
 
+  override def expPoint[A]: A => Unit => A =
+    a => { case () => a }
+
+  override def expWhole[A <: Any]: (Unit => A) => A =
+    p => p(())
+
   override def expCompose[A, B, C]: (A => B) => (C => A) => C => B =
     f => g => c => f(g(c))
 

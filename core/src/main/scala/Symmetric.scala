@@ -1,11 +1,22 @@
 package tf.bug.shinji
 
+/**
+ * A Symmetric Monoidal Category.
+ *
+ * @tparam Obj The upper bound type.
+ * @tparam Hom The homset functor.
+ * @tparam I The unit object.
+ * @tparam Tens The tensor product functor.
+ */
 trait Symmetric[
   Obj,
   Hom[_ <: Obj, _ <: Obj],
   I <: Obj,
   Tens[_ <: Obj, _ <: Obj] <: Obj
 ] extends Monoidal[Obj, Hom, I, Tens] {
+  /**
+   * An isomorphism between (A × B) and (B × A).
+   */
   def swap[A <: Obj, B <: Obj]: Hom[Tens[A, B], Tens[B, A]]
 
   override def associateLeft[A <: Obj, B <: Obj, C <: Obj]: Hom[Tens[A, Tens[B, C]], Tens[Tens[A, B], C]] = {
