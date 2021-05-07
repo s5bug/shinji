@@ -23,3 +23,15 @@ trait Arrow[
     andThen(duplicate[A], split(f, g))
 
 }
+
+trait ArrowLoop[
+  Obj,
+  Hom[_ <: Obj, _ <: Obj],
+  Empty <: Obj,
+  Prod[_ <: Obj, _ <: Obj] <: Obj,
+  F[_ <: Obj, _ <: Obj]
+] extends Arrow[Obj, Hom, Empty, Prod, F] {
+
+  def loop[A <: Obj, B <: Obj, C <: Obj](f: F[Prod[A, C], Prod[B, C]]): F[A, B]
+
+}
