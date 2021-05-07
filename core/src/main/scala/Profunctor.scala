@@ -8,8 +8,8 @@ trait Profunctor[
   F[_ <: ObjC, _ <: ObjD]
 ] {
 
-  val leftProfunctorCategory: Category[ObjC, HomC]
-  val rightProfunctorCategory: Category[ObjD, HomD]
+  def leftProfunctorCategory: Category[ObjC, HomC]
+  def rightProfunctorCategory: Category[ObjD, HomD]
 
   def dimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](f: HomC[C, A], g: HomD[B, D]): F[A, B] => F[C, D]
 

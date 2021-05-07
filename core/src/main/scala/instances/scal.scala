@@ -86,7 +86,7 @@ object Scal extends CartesianClosed[
   override def second[A, B, C]: (A => B) => ((C, A)) => (C, B) =
     rbimap
 
-  override val strongProfunctorCategory: Monoidal[Any, Function, Unit, Tuple2] = this
+  override def strongProfunctorCategory: Monoidal[Any, Function, Unit, Tuple2] = this
 
 }
 
@@ -96,7 +96,7 @@ object OptionMonad extends Monad[
   /* F = */ Option
 ] {
 
-  override val endofunctorCategory: Category[Any, Function] = Scal
+  override def endofunctorCategory: Category[Any, Function] = Scal
 
   override def map[A, B](f: A => B): Option[A] => Option[B] = _.map(f)
 

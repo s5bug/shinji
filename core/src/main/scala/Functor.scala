@@ -16,8 +16,8 @@ trait Functor[
   HomD[_ <: ObjD, _ <: ObjD],
   F[_ <: ObjC] <: ObjD
 ] {
-  val inFunctorCategory: Category[ObjC, HomC]
-  val outFunctorCategory: Category[ObjD, HomD]
+  def inFunctorCategory: Category[ObjC, HomC]
+  def outFunctorCategory: Category[ObjD, HomD]
 
   /**
    * The Functor's HomC → HomD mapping.
@@ -33,7 +33,7 @@ trait Endofunctor[
   Hom[_ <: Obj, _ <: Obj],
   F[_ <: Obj] <: Obj
 ] extends Functor[Obj, Hom, Obj, Hom, F] {
-  val endofunctorCategory: Category[Obj, Hom]
-  override final val inFunctorCategory = endofunctorCategory
-  override final val outFunctorCategory = endofunctorCategory
+  def endofunctorCategory: Category[Obj, Hom]
+  override final def inFunctorCategory = endofunctorCategory
+  override final def outFunctorCategory = endofunctorCategory
 }

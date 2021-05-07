@@ -10,9 +10,9 @@ trait Bifunctor[
   F[_ <: ObjC, _ <: ObjD] <: ObjE
 ] {
 
-  val leftBifunctorCategory: Category[ObjC, HomC]
-  val rightBifunctorCategory: Category[ObjD, HomD]
-  val outBifunctorCategory: Category[ObjE, HomE]
+  def leftBifunctorCategory: Category[ObjC, HomC]
+  def rightBifunctorCategory: Category[ObjD, HomD]
+  def outBifunctorCategory: Category[ObjE, HomE]
 
   def bimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](f: HomC[A, C], g: HomD[B, D]): HomE[F[A, B], F[C, D]]
 
