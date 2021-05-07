@@ -8,7 +8,7 @@ trait ArrowSyntax {
     Hom[_ <: Obj, _ <: Obj],
     Empty <: Obj,
     Prod[_ <: Obj, _ <: Obj] <: Obj,
-    F[_ <: Obj, _ <: Obj] <: Obj,
+    F[_ <: Obj, _ <: Obj],
     A <: Obj,
     B <: Obj
   ](f: F[A, B])(implicit arr: Arrow[Obj, Hom, Empty, Prod, F]) {
@@ -49,7 +49,7 @@ trait ArrowSyntax {
     Empty <: Obj,
     Prod[_ <: Obj, _ <: Obj] <: Obj,
     A <: Obj,
-    F[_, _]
+    F[_ <: Obj, _ <: Obj]
   ](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[Prod[Empty, A], A] =
     arr.unitorLeft[A]
 
@@ -59,7 +59,7 @@ trait ArrowSyntax {
     Empty <: Obj,
     Prod[_ <: Obj, _ <: Obj] <: Obj,
     A <: Obj,
-    F[_, _]
+    F[_ <: Obj, _ <: Obj]
   ](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[Prod[A, Empty], A] =
     arr.unitorRight[A]
 
@@ -69,7 +69,7 @@ trait ArrowSyntax {
     Empty <: Obj,
     Prod[_ <: Obj, _ <: Obj] <: Obj,
     A <: Obj,
-    F[_, _]
+    F[_ <: Obj, _ <: Obj]
   ](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[A, Prod[Empty, A]] =
     arr.deunitorLeft[A]
 
@@ -79,7 +79,7 @@ trait ArrowSyntax {
     Empty <: Obj,
     Prod[_ <: Obj, _ <: Obj] <: Obj,
     A <: Obj,
-    F[_, _]
+    F[_ <: Obj, _ <: Obj]
   ](implicit arr: Arrow[Obj, Hom, Empty, Prod, F]): F[A, Prod[A, Empty]] =
     arr.deunitorRight[A]
 
