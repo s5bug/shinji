@@ -11,13 +11,18 @@ package tf.bug.shinji
  */
 trait Functor[
   ObjC,
+  ConC[_ <: ObjC],
   HomC[_ <: ObjC, _ <: ObjC],
   ObjD,
+  ConD[_ <: ObjD],
   HomD[_ <: ObjD, _ <: ObjD],
   F[_ <: ObjC] <: ObjD
 ] {
-  def inFunctorCategory: Category[ObjC, HomC]
-  def outFunctorCategory: Category[ObjD, HomD]
+  def inFunctorCategory: Category[ObjC, ConC, HomC]
+  def outFunctorCategory: Category[ObjD, ConD, HomD]
+
+  implicit def functorApplyConstraint[A <: ObjC](implicit a: ConC[A]): ConD[F[A]]
+  def functorExtractConstraint[A <: ObjC](implicit fa: ConD[F[A]]): ConC[A]
 
   /**
    * The Functor's HomC → HomD mapping.
@@ -30,10 +35,12 @@ trait Functor[
 
 trait Endofunctor[
   Obj,
+  Con[_ <: Obj],
   Hom[_ <: Obj, _ <: Obj],
   F[_ <: Obj] <: Obj
-] extends Functor[Obj, Hom, Obj, Hom, F] {
-  def endofunctorCategory: Category[Obj, Hom]
-  override final def inFunctorCategory = endofunctorCategory
-  override final def outFunctorCategory = endofunctorCategory
+] extends Functor[Obj, Con, Hom, Obj, Con, Hom, F] {
+
+  def endofunctorCategory: Category[Obj, Con, Hom]
+  override final def inFunctorCategory: Category[Obj, Con, Hom] = endofunctorCategory
+  override final def outFunctorCategory: Category[Obj, Con, Hom] = endofunctorCategory
 }

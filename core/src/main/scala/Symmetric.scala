@@ -10,16 +10,17 @@ package tf.bug.shinji
  */
 trait Symmetric[
   Obj,
+  Con[_ <: Obj],
   Hom[_ <: Obj, _ <: Obj],
   I <: Obj,
   Tens[_ <: Obj, _ <: Obj] <: Obj
-] extends Monoidal[Obj, Hom, I, Tens] {
+] extends Monoidal[Obj, Con, Hom, I, Tens] {
   /**
    * An isomorphism between (A × B) and (B × A).
    */
-  def swap[A <: Obj, B <: Obj]: Hom[Tens[A, B], Tens[B, A]]
+  def swap[A <: Obj, B <: Obj](implicit a: Con[A], b: Con[B]): Hom[Tens[A, B], Tens[B, A]]
 
-  override def associateLeft[A <: Obj, B <: Obj, C <: Obj]: Hom[Tens[A, Tens[B, C]], Tens[Tens[A, B], C]] = {
+  override def associateLeft[A <: Obj, B <: Obj, C <: Obj](implicit a: Con[A], b: Con[B], c: Con[C]): Hom[Tens[A, Tens[B, C]], Tens[Tens[A, B], C]] = {
     val step1 = swap[A, Tens[B, C]]
     val step2 = associateRight[B, C, A]
     val step3 = swap[B, Tens[C, A]]
@@ -34,10 +35,10 @@ trait Symmetric[
     before
   }
 
-  override def unitorRight[A <: Obj]: Hom[Tens[A, I], A] =
+  override def unitorRight[A <: Obj](implicit a: Con[A]): Hom[Tens[A, I], A] =
     andThen(swap[A, I], unitorLeft[A])
 
-  override def deunitorRight[A <: Obj]: Hom[A, Tens[A, I]] =
+  override def deunitorRight[A <: Obj](implicit a: Con[A]): Hom[A, Tens[A, I]] =
     andThen(deunitorLeft[A], swap[I, A])
 
 }

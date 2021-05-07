@@ -8,13 +8,14 @@ package tf.bug.shinji
  */
 trait Category[
   Obj,
+  Con[_ <: Obj],
   Hom[_ <: Obj, _ <: Obj]
-] extends Compose[Obj, Hom] {
+] extends Compose[Obj, Con, Hom] {
   /**
    * An identity morphism.
    *
    * @tparam A The target object.
    * @return A morphism `id` such that `id ∘ f ≅ f ∘ id ≅ f`.
    */
-  def id[A <: Obj]: Hom[A, A]
+  def id[A <: Obj](implicit a: Con[A]): Hom[A, A]
 }

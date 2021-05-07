@@ -11,11 +11,12 @@ package tf.bug.shinji
  */
 trait ClosedMonoidal[
   Obj,
+  Con[_ <: Obj],
   Hom[_ <: Obj, _ <: Obj],
   I <: Obj,
   Tens[_ <: Obj, _ <: Obj] <: Obj,
   Exp[_ <: Obj, _ <: Obj] <: Obj
-] extends Closed[Obj, Hom, I, Exp] with Monoidal[Obj, Hom, I, Tens] {
+] extends Closed[Obj, Con, Hom, I, Exp] with Monoidal[Obj, Con, Hom, I, Tens] {
 
   /**
    * The forward map in the hom-tens adjunction.

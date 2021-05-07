@@ -10,17 +10,18 @@ package tf.bug.shinji
  */
 trait Cartesian[
   Obj,
+  Con[_ <: Obj],
   Hom[_ <: Obj, _ <: Obj],
   Empty <: Obj,
   Prod[_ <: Obj, _ <: Obj] <: Obj
-] extends Symmetric[Obj, Hom, Empty, Prod] {
+] extends Symmetric[Obj, Con, Hom, Empty, Prod] {
   /**
    * Duplicates an object.
    *
    * @tparam A The target object.
    * @return A morphism that duplicates the target object.
    */
-  def duplicate[A <: Obj]: Hom[A, Prod[A, A]]
+  def duplicate[A <: Obj](implicit a: Con[A]): Hom[A, Prod[A, A]]
 
   /**
    * Terminates an object.
@@ -28,5 +29,5 @@ trait Cartesian[
    * @tparam A The target object.
    * @return A morphism that terminates the target object.
    */
-  def terminate[A <: Obj]: Hom[A, Empty]
+  def terminate[A <: Obj](implicit a: Con[A]): Hom[A, Empty]
 }
