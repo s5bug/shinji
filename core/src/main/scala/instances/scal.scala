@@ -28,11 +28,11 @@ object Scal extends CartesianClosed[
 
   override def strongProfunctorCategory: Monoidal[Any, λ[α => DummyImplicit], Function, Unit, Tuple2] = this
 
-  override def first[A <: Any, B <: Any, C <: Any]: (A => B) => ((A, C)) => (B, C) =
-    f => { case (a, c) => (f(a), c) }
+  override def first[A <: Any, B <: Any, C <: Any](f: A => B)(implicit c: DummyImplicit): ((A, C)) => (B, C) =
+    { case (a, c) => (f(a), c) }
 
-  override def second[A <: Any, B <: Any, C <: Any]: (A => B) => ((C, A)) => (C, B) =
-    f => { case (c, a) => (c, f(a)) }
+  override def second[A <: Any, B <: Any, C <: Any](f: A => B)(implicit c: DummyImplicit): ((C, A)) => (C, B) =
+    { case (c, a) => (c, f(a)) }
 
   override def curry[A <: Any, B <: Any, C <: Any](f: ((A, B)) => C): A => B => C =
     a => b => f((a, b))

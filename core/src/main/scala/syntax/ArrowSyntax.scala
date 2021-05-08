@@ -17,11 +17,11 @@ trait ArrowSyntax {
     def andThen[C <: Obj](g: F[B, C]): F[A, C] = arr.andThen(f, g)
     def compose[C <: Obj](g: F[C, A]): F[C, B] = arr.compose(f, g)
     def dimap[C <: Obj, D <: Obj](g: Hom[C, A], h: Hom[B, D]): F[C, D] = arr.dimap(g, h)(f)
-    def first[C <: Obj]: F[Prod[A, C], Prod[B, C]] = arr.first[A, B, C](f)
+    def first[C <: Obj](implicit c: Con[C]): F[Prod[A, C], Prod[B, C]] = arr.first[A, B, C](f)
     def ldimap[C <: Obj](g: Hom[C, A]): F[C, B] = arr.ldimap(g)(arr.profunctorRightConstraint(f))(f)
     def merge[C <: Obj](g: F[A, C]): F[A, Prod[B, C]] = arr.merge(f, g)
     def rdimap[C <: Obj](g: Hom[B, C]): F[A, C] = arr.rdimap(g)(arr.profunctorLeftConstraint(f))(f)
-    def second[C <: Obj]: F[Prod[C, A], Prod[C, B]] = arr.second[A, B, C](f)
+    def second[C <: Obj](implicit c: Con[C]): F[Prod[C, A], Prod[C, B]] = arr.second[A, B, C](f)
     def split[C <: Obj, D <: Obj](g: F[C, D]): F[Prod[A, C], Prod[B, D]] = arr.split(f, g)
 
     def &&&[C <: Obj](g: F[A, C]): F[A, Prod[B, C]] = arr.merge(f, g)

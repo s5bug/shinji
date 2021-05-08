@@ -13,7 +13,7 @@ trait StrongProfunctor[
   override final def leftProfunctorCategory: Monoidal[Obj, Con, Hom, I, Tens] = strongProfunctorCategory
   override final def rightProfunctorCategory: Monoidal[Obj, Con, Hom, I, Tens] = strongProfunctorCategory
 
-  def first[A <: Obj, B <: Obj, C <: Obj]: F[A, B] => F[Tens[A, C], Tens[B, C]]
-  def second[A <: Obj, B <: Obj, C <: Obj]: F[A, B] => F[Tens[C, A], Tens[C, B]]
+  def first[A <: Obj, B <: Obj, C <: Obj](f: F[A, B])(implicit c: Con[C]): F[Tens[A, C], Tens[B, C]]
+  def second[A <: Obj, B <: Obj, C <: Obj](f: F[A, B])(implicit c: Con[C]): F[Tens[C, A], Tens[C, B]]
 
 }
