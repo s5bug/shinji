@@ -2,31 +2,47 @@ package tf.bug.shinji
 
 trait Bifunctor[
   ObjC,
-  ConC[_ <: ObjC],
+  ValC[_ <: ObjC],
   HomC[_ <: ObjC, _ <: ObjC],
   ObjD,
-  ConD[_ <: ObjD],
+  ValD[_ <: ObjD],
   HomD[_ <: ObjD, _ <: ObjD],
   ObjE,
-  ConE[_ <: ObjE],
+  ValE[_ <: ObjE],
   HomE[_ <: ObjE, _ <: ObjE],
-  F[_ <: ObjC, _ <: ObjD] <: ObjE
+  F[_ <: ObjC, _ <: ObjD] <: ObjE,
 ] {
 
-  def leftBifunctorCategory: Category[ObjC, ConC, HomC]
-  def rightBifunctorCategory: Category[ObjD, ConD, HomD]
-  def outBifunctorCategory: Category[ObjE, ConE, HomE]
+  val functorCategoryInLeft: Category[ObjC, ValC, HomC]
+  val functorCategoryInRight: Category[ObjD, ValD, HomD]
+  val functorCategoryOut: Category[ObjE, ValE, HomE]
 
-  implicit def bifunctorApplyConstraint[A <: ObjC, B <: ObjD](implicit a: ConC[A], b: ConD[B]): ConE[F[A, B]]
-  def bifunctorLeftConstraint[A <: ObjC, B <: ObjD](implicit e: ConE[F[A, B]]): ConC[A]
-  def bifunctorRightConstraint[A <: ObjC, B <: ObjD](implicit e: ConE[F[A, B]]): ConD[B]
+  def mapVals[A <: ObjC, B <: ObjD](va: ValC[A], vb: ValD[B]): ValE[F[A, B]]
 
-  def bimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](f: HomC[A, C], g: HomD[B, D]): HomE[F[A, B], F[C, D]]
+  def bimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](l: HomC[A, C], r: HomD[B, D]): HomE[F[A, B], F[C, D]]
 
-  def lbimap[A <: ObjC, B <: ObjD, C <: ObjC](f: HomC[A, C])(implicit b: ConD[B]): HomE[F[A, B], F[C, B]] =
-    bimap(f, rightBifunctorCategory.id[B])
+  def fixLeft[A <: ObjC](va: ValC[A]): Functor[ObjD, ValD, HomD, ObjE, ValE, HomE, λ[`α <: ObjD` => F[A, α]]] =
+    new Functor[ObjD, ValD, HomD, ObjE, ValE, HomE, λ[`α <: ObjD` => F[A, α]]] {
+      override val functorCategoryIn: Category[ObjD, ValD, HomD] = Bifunctor.this.functorCategoryInRight
+      override val functorCategoryOut: Category[ObjE, ValE, HomE] = Bifunctor.this.functorCategoryOut
 
-  def rbimap[A <: ObjC, B <: ObjD, C <: ObjD](f: HomD[B, C])(implicit a: ConC[A]): HomE[F[A, B], F[A, C]] =
-    bimap(leftBifunctorCategory.id[A], f)
+      override def mapVal[B <: ObjD](vb: ValD[B]): ValE[F[A, B]] =
+        Bifunctor.this.mapVals(va, vb)
+
+      override def map[I <: ObjD, J <: ObjD](f: HomD[I, J]): HomE[F[A, I], F[A, J]] =
+        Bifunctor.this.bimap(Bifunctor.this.functorCategoryInLeft.id(va), f)
+    }
+
+  def fixRight[B <: ObjD](vb: ValD[B]): Functor[ObjC, ValC, HomC, ObjE, ValE, HomE, λ[`α <: ObjC` => F[α, B]]] =
+    new Functor[ObjC, ValC, HomC, ObjE, ValE, HomE, λ[`α <: ObjC` => F[α, B]]] {
+      override val functorCategoryIn: Category[ObjC, ValC, HomC] = Bifunctor.this.functorCategoryInLeft
+      override val functorCategoryOut: Category[ObjE, ValE, HomE] = Bifunctor.this.functorCategoryOut
+
+      override def mapVal[A <: ObjC](va: ValC[A]): ValE[F[A, B]] =
+        Bifunctor.this.mapVals(va, vb)
+
+      override def map[I <: ObjC, J <: ObjC](f: HomC[I, J]): HomE[F[I, B], F[J, B]] =
+        Bifunctor.this.bimap(f, Bifunctor.this.functorCategoryInRight.id(vb))
+    }
 
 }

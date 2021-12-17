@@ -1,142 +1,115 @@
 package tf.bug.shinji
 package instances
 
-object Scal extends CartesianClosed[
+object Scal extends CartesianClosedCategory[
   /* Obj = */ Any,
-  /* Con = */ λ[α => DummyImplicit],
+  /* Val = */ λ[α => Unit],
   /* Hom = */ Function1,
-  /* Empty = */ Unit,
+  /* I = */ Unit,
   /* Prod = */ Tuple2,
-  /* Exp = */ Function1
-] with Arrow[
-  /* Obj = */ Any,
-  /* Con = */ λ[α => DummyImplicit],
-  /* Hom = */ Function1,
-  /* Empty = */ Unit,
-  /* Prod = */ Tuple2,
-  /* F = */ Function1
+  /* Exp = */ Function1,
 ] {
 
-  override def eval[A <: Any, B <: Any](implicit a: DummyImplicit, b: DummyImplicit): ((A => B, A)) => B = {
-    case (f, a) => f(a)
-  }
+  override def id[A <: Any](v: Unit): A => A =
+    (a: A) => a
 
-  override def multiply[A <: Any, B <: Any](implicit a: DummyImplicit, b: DummyImplicit): A => B => (A, B) =
-    a => b => (a, b)
+  override def compose[A <: Any, B <: Any, C <: Any](f: A => B, g: B => C): A => C =
+    (a: A) => g(f(a))
 
-  override def lift[A <: Any, B <: Any](f: A => B): A => B = f
+  override def homExtractLeft[A <: Any, B <: Any](hom: A => B): Unit =
+    ()
 
-  override def strongProfunctorCategory: Monoidal[Any, λ[α => DummyImplicit], Function, Unit, Tuple2] = this
+  override def homExtractRight[A <: Any, B <: Any](hom: A => B): Unit =
+    ()
 
-  override def first[A <: Any, B <: Any, C <: Any](f: A => B)(implicit c: DummyImplicit): ((A, C)) => (B, C) =
-    { case (a, c) => (f(a), c) }
+  override val monoidalTensBifunctor: Bifunctor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Tuple2] =
+    new Bifunctor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Tuple2] {
+      override val functorCategoryInLeft: Category[Any,  λ[α => Unit], Function1] = Scal
+      override val functorCategoryInRight: Category[Any, λ[α => Unit], Function1] = Scal
+      override val functorCategoryOut: Category[Any, λ[α => Unit], Function1] = Scal
 
-  override def second[A <: Any, B <: Any, C <: Any](f: A => B)(implicit c: DummyImplicit): ((C, A)) => (C, B) =
-    { case (c, a) => (c, f(a)) }
+      override def mapVals[A <: Any, B <: Any](va: Unit, vb: Unit): Unit = ()
 
-  override def curry[A <: Any, B <: Any, C <: Any](f: ((A, B)) => C): A => B => C =
-    a => b => f((a, b))
+      override def bimap[A <: Any, B <: Any, C <: Any, D <: Any](l: A => C, r: B => D): ((A, B)) => (C, D) =
+        { case (a, b) => (l(a), r(b)) }
+    }
 
-  override def uncurry[A <: Any, B <: Any, C <: Any](f: A => B => C): ((A, B)) => C =
-    { case (a, b) => f(a)(b) }
+  override def tensExtractLeft[A <: Any, B <: Any](v: Unit): Unit = ()
+  override def tensExtractRight[A <: Any, B <: Any](v: Unit): Unit = ()
 
-  override def duplicate[A <: Any](implicit a: DummyImplicit): A => (A, A) =
-    a => (a, a)
+  override def identity: Unit = ()
+  override def identityVal: Unit = ()
 
-  override def terminate[A <: Any](implicit a: DummyImplicit): A => Unit =
+  override def associative[A <: Any, B <: Any, C <: Any]: Iso[Any, λ[α => Unit], Function1, ((A, B), C), (A, (B, C))] =
+    Iso[Any, λ[α => Unit], Function1, ((A, B), C), (A, (B, C))](
+      forward = { case ((a, b), c) => (a, (b, c)) },
+      backward = { case (a, (b, c)) => ((a, b), c) }
+    )
+
+  override def leftUnit[A <: Any]: Iso[Any, λ[α => Unit], Function1, (Unit, A), A] =
+    Iso[Any, λ[α => Unit], Function1, (Unit, A), A](
+      forward = { case ((), a) => a },
+      backward = { a => ((), a) }
+    )
+
+  override def rightUnit[A <: Any]: Iso[Any, λ[α => Unit], Function1, (A, Unit), A] =
+    Iso[Any, λ[α => Unit], Function1, (A, Unit), A](
+      forward = { case (a, ()) => a },
+      backward = { a => (a, ()) }
+    )
+
+  override def braid[X <: Any, Y <: Any]: Iso[Any, λ[α => Unit], Function, (X, Y), (Y, X)] =
+    Iso(_.swap, _.swap)
+
+  override def duplicate[X <: Any](v: Unit): X => (X, X) =
+    x => (x, x)
+
+  override def terminate[X <: Any](v: Unit): X => Unit =
     _ => ()
 
-  override def swap[A <: Any, B <: Any](implicit a: DummyImplicit, b: DummyImplicit): ((A, B)) => (B, A) =
-    { case (a, b) => (b, a) }
+  override val closedExpProfunctor: Profunctor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Function1] =
+    new Profunctor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Function1] {
+      override val functorCategoryInLeft: Category[Any, λ[α => Unit], Function1] = Scal
+      override val functorCategoryInRight: Category[Any, λ[α => Unit], Function1] = Scal
+      override val functorCategoryOut: Category[Any, λ[α => Unit], Function1] = Scal
 
-  override def id[A <: Any](implicit a: DummyImplicit): A => A =
-    a => a
+      override def mapVals[A <: Any, B <: Any](va: Unit, vb: Unit): Unit = ()
 
-  override def profunctorLeftConstraint[A <: Any, B <: Any](f: A => B): DummyImplicit =
-    DummyImplicit.dummyImplicit
+      override def dimap[A <: Any, B <: Any, C <: Any, D <: Any](l: C => A, r: B => D): (A => B) => (C => D) =
+        (f: A => B) => (c: C) => r(f(l(c)))
+    }
 
-  override def profunctorRightConstraint[A <: Any, B <: Any](f: A => B): DummyImplicit =
-    DummyImplicit.dummyImplicit
+  override def expExtractLeft[A <: Any, B <: Any](v: Unit): Unit = ()
+  override def expExtractRight[A <: Any, B <: Any](v: Unit): Unit = ()
 
-  override def associateRight[A <: Any, B <: Any, C <: Any](implicit a: DummyImplicit, b: DummyImplicit, c: DummyImplicit): (((A, B), C)) => (A, (B, C)) =
-    { case ((a, b), c) => (a, (b, c)) }
+  override def jd[A <: Any](v: Unit): Unit => A => A =
+    id
 
-  override def unitorLeft[A <: Any](implicit a: DummyImplicit): ((Unit, A)) => A =
-    { case ((), a) => a }
+  override def read[X <: Any, Y <: Any, Z <: Any](vx: Unit, vy: Unit, vz: Unit): (Y => Z) => (X => Y) => X => Z =
+    f => g => compose(g, f)
 
-  override def deunitorLeft[A <: Any](implicit a: DummyImplicit): A => (Unit, A) =
-    a => ((), a)
+  override def homTensAdj[B <: Any]: Adjunction[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, (B, *), B => *] =
+    new Adjunction[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, (B, *), B => *] {
+      override def free: Functor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, Tuple2[B, *]] =
+        monoidalTensBifunctor.fixLeft[B](())
 
-  override def unitorRight[A <: Any](implicit a: DummyImplicit): ((A, Unit)) => A =
-    { case (a, ()) => a }
+      override def forgetful: Functor[Any, λ[α => Unit], Function1, Any, λ[α => Unit], Function1, B => *] =
+        closedExpProfunctor.fixLeft[B](())
 
-  override def deunitorRight[A <: Any](implicit a: DummyImplicit): A => (A, Unit) =
-    a => (a, ())
+      override def iso[I <: Any, J <: Any](va: Unit, vb: Unit): Iso[Any, λ[α => Unit], Function1, ((B, I)) => J, I => B => J] =
+        Iso(
+          forward = (f: ((B, I)) => J) => i => b => f((b, i)),
+          backward = (f: I => B => J) => { case (i, b) => f(b)(i) }
+        )
+    }
 
-  override implicit def unitConstraint: DummyImplicit =
-    DummyImplicit.dummyImplicit
+  def optionT[F[_ <: Any] <: Any](m: Monad[Any, λ[α => Unit], Function1, F]): Monad[Any, λ[α => Unit], Function1, λ[α => F[Option[α]]]] =
+    Monad.transform(Scal, OptionTAdjunction, PointedScal.liftMonad(m))
 
-  override implicit def exponentialConstraint[A <: Any, B <: Any](implicit a: DummyImplicit, b: DummyImplicit): DummyImplicit =
-    DummyImplicit.dummyImplicit
+  def listT[F[_ <: Any] <: Any](m: Monad[Any, λ[α => Unit], Function1, F]): Monad[Any, λ[α => Unit], Function1, λ[α => F[List[α]]]] =
+    Monad.transform(Scal, ListTAdjunction, MonoidScal.liftMonad(m))
 
-  override def expId[A <: Any](implicit a: DummyImplicit): Unit => A => A =
-    { case () => a => a }
+  def stateT[F[_ <: Any] <: Any, S <: Any](m: Monad[Any, λ[α => Unit], Function1, F]): Monad[Any, λ[α => Unit], Function1, λ[α => S => F[(S, α)]]] =
+    Monad.transform(Scal, Scal.homTensAdj[S], m)
 
-  override def expPoint[A <: Any](implicit a: DummyImplicit): A => Unit => A =
-    a => { case () => a }
-
-  override def expWhole[A <: Any](implicit a: DummyImplicit): (Unit => A) => A =
-    f => f(())
-
-  override def expCompose[A <: Any, B <: Any, C <: Any](implicit a: DummyImplicit, b: DummyImplicit, c: DummyImplicit): (A => B) => (C => A) => C => B =
-    f => g => f.compose(g)
-
-  override def homLeftConstraint[A <: Any, B <: Any](hom: A => B): DummyImplicit =
-    DummyImplicit.dummyImplicit
-
-  override def homRightConstraint[A <: Any, B <: Any](hom: A => B): DummyImplicit =
-    DummyImplicit.dummyImplicit
-
-  override def compose[A <: Any, B <: Any, C <: Any](f: B => C, g: A => B): A => C =
-    f.compose(g)
-
-  override implicit def bifunctorApplyConstraint[A <: Any, B <: Any](implicit a: DummyImplicit, b: DummyImplicit): DummyImplicit =
-    DummyImplicit.dummyImplicit
-
-  override def bifunctorLeftConstraint[A <: Any, B <: Any](implicit e: DummyImplicit): DummyImplicit =
-    DummyImplicit.dummyImplicit
-
-  override def bifunctorRightConstraint[A <: Any, B <: Any](implicit e: DummyImplicit): DummyImplicit =
-    DummyImplicit.dummyImplicit
-
-  override def bimap[A <: Any, B <: Any, C <: Any, D <: Any](f: A => C, g: B => D): ((A, B)) => (C, D) =
-    { case (a, b) => (f(a), g(b)) }
-
-}
-
-object OptionMonad extends Monad[
-  /* Obj = */ Any,
-  /* Con = */ λ[α => DummyImplicit],
-  /* Hom = */ Function1,
-  /* F = */ Option
-] {
-
-  override def endofunctorCategory: Category[Any, λ[α => DummyImplicit], Function] = Scal
-
-  override def map[A, B](f: A => B): Option[A] => Option[B] = _.map(f)
-
-  override def pure[A](implicit a: DummyImplicit): A => Option[A] = Option(_)
-  override def flatten[A](implicit a: DummyImplicit): Option[Option[A]] => Option[A] = _.flatten
-
-  override implicit def functorApplyConstraint[A <: Any](implicit a: DummyImplicit): DummyImplicit = a
-  override def functorExtractConstraint[A <: Any](implicit fa: DummyImplicit): DummyImplicit = fa
-
-}
-
-object ScalInstances {
-  trait all {
-    implicit val scalCategory: CartesianClosed[Any, λ[α => DummyImplicit], Function1, Unit, Tuple2, Function1] = Scal
-    implicit val scalArrow: Arrow[Any, λ[α => DummyImplicit], Function1, Unit, Tuple2, Function1] = Scal
-    implicit val optionMonad: Monad[Any, λ[α => DummyImplicit], Function1, Option] = OptionMonad
-  }
 }

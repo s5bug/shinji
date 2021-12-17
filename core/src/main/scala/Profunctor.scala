@@ -2,23 +2,35 @@ package tf.bug.shinji
 
 trait Profunctor[
   ObjC,
-  ConC[_ <: ObjC],
+  ValC[_ <: ObjC],
   HomC[_ <: ObjC, _ <: ObjC],
   ObjD,
-  ConD[_ <: ObjD],
+  ValD[_ <: ObjD],
   HomD[_ <: ObjD, _ <: ObjD],
-  F[_ <: ObjC, _ <: ObjD]
+  ObjE,
+  ValE[_ <: ObjE],
+  HomE[_ <: ObjE, _ <: ObjE],
+  F[_ <: ObjC, _ <: ObjD] <: ObjE,
 ] {
 
-  def profunctorLeftConstraint[A <: ObjC, B <: ObjD](f: F[A, B]): ConC[A]
-  def profunctorRightConstraint[A <: ObjC, B <: ObjD](f: F[A, B]): ConD[B]
+  val functorCategoryInLeft: Category[ObjC, ValC, HomC]
+  val functorCategoryInRight: Category[ObjD, ValD, HomD]
+  val functorCategoryOut: Category[ObjE, ValE, HomE]
 
-  def leftProfunctorCategory: Category[ObjC, ConC, HomC]
-  def rightProfunctorCategory: Category[ObjD, ConD, HomD]
+  def mapVals[A <: ObjC, B <: ObjD](va: ValC[A], vb: ValD[B]): ValE[F[A, B]]
 
-  def dimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](f: HomC[C, A], g: HomD[B, D]): F[A, B] => F[C, D]
+  def dimap[A <: ObjC, B <: ObjD, C <: ObjC, D <: ObjD](l: HomC[C, A], r: HomD[B, D]): HomE[F[A, B], F[C, D]]
 
-  def ldimap[A <: ObjC, B <: ObjD, C <: ObjC](f: HomC[C, A])(implicit b: ConD[B]): F[A, B] => F[C, B] = dimap(f, rightProfunctorCategory.id[B])
-  def rdimap[A <: ObjC, B <: ObjD, C <: ObjD](f: HomD[B, C])(implicit a: ConC[A]): F[A, B] => F[A, C] = dimap(leftProfunctorCategory.id[A], f)
+  def fixLeft[A <: ObjC](va: ValC[A]): Functor[ObjD, ValD, HomD, ObjE, ValE, HomE, λ[`α <: ObjD` => F[A, α]]] =
+    new Functor[ObjD, ValD, HomD, ObjE, ValE, HomE, λ[`α <: ObjD` => F[A, α]]] {
+      override val functorCategoryIn: Category[ObjD, ValD, HomD] = Profunctor.this.functorCategoryInRight
+      override val functorCategoryOut: Category[ObjE, ValE, HomE] = Profunctor.this.functorCategoryOut
+
+      override def mapVal[B <: ObjD](vb: ValD[B]): ValE[F[A, B]] =
+        Profunctor.this.mapVals(va, vb)
+
+      override def map[I <: ObjD, J <: ObjD](f: HomD[I, J]): HomE[F[A, I], F[A, J]] =
+        Profunctor.this.dimap(Profunctor.this.functorCategoryInLeft.id(va), f)
+    }
 
 }
