@@ -31,7 +31,8 @@ sort of runtime-checking to make sure I have the right types.
 
 This library is meant to be usable in Scala 2, and this kind of behavior cannot
 be encoded in Scala 2. However, if Scala 3 is used, then `Obj` could be
-replaced with `Obj <: AnyKind`, and then this behavior can be specified.
+replaced with `Obj <: AnyKind`, and then this behavior can be specified,
+[as shown here](https://gist.github.com/s5bug/dc9b765ee2ba11cab3d7bcfc2a0a44dc).
 
 ## what does any of this code mean?
 
